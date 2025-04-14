@@ -28,7 +28,7 @@
     </div>
   </header>
 
-  <div class="min-h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center" style= "margin-top : -50px">
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h2 class="text-2xl font-bold text-center text-blue-700 mb-6">TrustBank Login</h2>
 
@@ -42,26 +42,34 @@
       <form id="customerForm" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Customer ID</label>
-          <input type="text" placeholder="Enter your ID" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" required placeholder="Enter your ID" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="password" required placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Customer</button>
+        <button type="submit" name="b1" value="CustomerLogin" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Customer</button>
+        <div style="text-align: center;">
+        	<a href="Forget1.jsp" style="color: Red; padding-right:15px;">Forget Details</a>
+        	<span><strong>|</strong></span>
+        	<a href="Registration.jsp" style="color: Red; padding-left:15px;">New Customer? Register!</a>
+        </div>
       </form>
 
       <!-- Admin Login Form -->
-      <form id="adminForm" class="space-y-4 hidden">
+      <form id="adminForm" class="space-y-4 hidden" method="post" Action="Login">
         <div>
           <label class="block text-sm font-medium text-gray-700">Admin Username</label>
-          <input type="text" placeholder="Enter admin username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" name="t1" required placeholder="Enter admin username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="password" name="t2" required placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Admin</button>
+        <button type="submit" name="b1" value="AdminLogin" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Admin</button>
+        <div style="text-align: center;">
+        	<a href="Forget2.jsp" style="color: Red">Forget Details</a>
+        </div>
       </form>
     </div>
   </div>
