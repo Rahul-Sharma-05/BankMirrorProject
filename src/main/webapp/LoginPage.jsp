@@ -15,6 +15,18 @@
 </head>
 <body class="bg-gray-100">
 
+<%
+    String message = (String) request.getAttribute("message");
+    if (message != null) {
+%>
+    <script>
+        alert("<%= message %>");
+    </script>
+<%
+    }
+%>
+
+
 	<!-- Navbar -->
   <header class="bg-white shadow">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">

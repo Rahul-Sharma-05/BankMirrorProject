@@ -91,9 +91,21 @@
     </style>
 </head>
 <body>
+
+<%
+    String message = (String) request.getAttribute("message");
+    if (message != null) {
+%>
+    <script>
+        alert("<%= message %>");
+    </script>
+<%
+    }
+%>
+
     <div class="container">
         <h2>Customer Registration</h2>
-        <form action="/Registration" method="post">
+        <form action="Registration" method="post">
             <div class="name-row">
                 <div class="form-group">
                     <label>First Name:</label>
@@ -114,7 +126,8 @@
             <br>
 
             <label style="margin-right:25px;">Email Address:</label>
-            <input type="email" id="email" name="email" required onchange="checkGmail()">
+            <input type="email" id="email" name="email" required onblur="checkGmail()" oninput="otpSection.style.display='none'; registerBtn.disabled=false;">
+
             <br>
 
             <!-- OTP Section (Initially Hidden) -->
@@ -124,7 +137,7 @@
                 <button type="button" onclick="verifyOtp()">Verify OTP</button>
                 <span id="otpStatus" style="margin-left: 10px;"></span>
                 <br>
-                <label style="margin-right:70px;">OTP has been sent your e-mail. Expires after 3 minutes.</label>
+                <span style="color: red; font-size: medium;">OTP has been sent your e-mail. Expires after 3 minutes.</span>
             </div>
 
             <label style="margin-right:70px;">Address:</label>
@@ -133,12 +146,37 @@
 
             <label for="password" style="margin-right: 60px;">Password:</label>
             <input type="password" id="password" name="password" required>
-            <span id="passwordError" style="color: red;"></span>
+            <br>
+            <span id="passwordError" style="color: red; font-size: medium;"></span>
             <br>
 
             <input type="submit" value="Register" id="registerBtn">
         </form>
     </div>
+    
+    <script>
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    
+    passwordInput.addEventListener('input', function () {
+        const password = passwordInput.value;
+        const minLength = 8;
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        // Clear previous error message
+        passwordError.textContent = '';
+
+        // Validate password
+        if (password.length < minLength) {
+            passwordError.textContent = 'Password must be at least 8 characters long.';
+        } else if (!hasLower || !hasUpper || !hasNumber || !hasSpecial) {
+            passwordError.textContent = 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.';
+        }
+    });
+</script>
     
     <script>
     let generatedOtp = "";
@@ -155,33 +193,55 @@
         const registerBtn = document.getElementById("registerBtn");
 
         if (email.endsWith("@gmail.com")) {
-            // Generate OTP
-            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      //      alert("Your OTP is: " + generatedOtp); // For demo purposes only
+        	
+        	//Verifying Email Uniqueness
+        	fetch("CheckEmailServlet", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "email=" + encodeURIComponent(email)
+    })
+        .then(res => res.text())
+        .then(data => {
+            if (data === "exists") {
+                alert("Email already registered!");
+            }
+            if (data === "unique"){
+            	   
+            	// Generate OTP
+                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+          //      alert("Your OTP is: " + generatedOtp); // For demo purposes only
 
-            otpVerified = false;
-            registerBtn.disabled = true;
-            otpSection.style.display = "block";
+                otpVerified = false;
+                registerBtn.disabled = true;
+                otpSection.style.display = "block";
 
-            // Set OTP expiration time to 3 minutes from now
-            otpExpirationTime = Date.now() + 3 * 60 * 1000;
+                // Set OTP expiration time to 3 minutes from now
+                otpExpirationTime = Date.now() + 3 * 60 * 1000;
 
-            // Send OTP to server (optional)
-            fetch("SendOtpMail.jsp", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: "email=" + encodeURIComponent(email) +
-          "&otp=" + encodeURIComponent(generatedOtp) +
-          "&name=" + encodeURIComponent(fullName)
-}).then(response => response.text())
-            .then(data => {
-                console.log("Server response:", data);
-            })
-            .catch(error => {
-                console.error("Error sending OTP:", error);
-            });
+                // Send OTP to server (optional)
+                fetch("SendOtpMail", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "email=" + encodeURIComponent(email) +
+              "&otp=" + encodeURIComponent(generatedOtp) +
+              "&name=" + encodeURIComponent(fullName)
+    }).then(response => response.text())
+                .then(data => {
+                    console.log("Server response:", data);
+                })
+                .catch(error => {
+                    console.error("Error sending OTP:", error);
+                });
+            	
+            }
+        });
+        	
+        	
+            
         } else {
             otpSection.style.display = "none";
             registerBtn.disabled = false;
