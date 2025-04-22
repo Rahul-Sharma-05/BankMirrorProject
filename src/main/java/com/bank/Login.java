@@ -57,15 +57,22 @@ public class Login extends HttpServlet {
     				out.println("<script>alert('Login Faild. User Id or Password Mismachted.')</script>");
 //    				response.setContentType("text/html");
 //    				out.print("<h3 style='color:red>Email Id and password did not match.</h3>");
-    				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
-    				rd.include(request, response);
+//    				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
+//    				rd.include(request, response);
+    				
+    				out.println("<script>window.location.href = \"LoginPage.jsp\";</script>");
+    				
     			}
     		}else {
     			out.println("<script>alert('Admin Id Not found.')</script>");
 //    			response.setContentType("text/html");
 //				out.print("<h3 style='color:red>User Id not Found.</h3>");
-				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
-				rd.include(request, response);
+//				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
+//				rd.include(request, response);
+				
+    			out.println("<script>window.location.href = \"LoginPage.jsp\";</script>");
+				
+				
     		}
     			
     			
@@ -75,7 +82,7 @@ public class Login extends HttpServlet {
     	}
     	       //End Of Admin Login
     	       
-    	       //Start of Student Login
+    	       //Start of Customer Login
     	       
     	       
     	 if(bt.equalsIgnoreCase("CustomerLogin")) {
@@ -89,7 +96,7 @@ public class Login extends HttpServlet {
     		Connection con = DriverManager.getConnection(  
     		"jdbc:mysql://localhost:3306/bank","root","Admin@123");  
     		
-    		PreparedStatement pstm = con.prepareStatement("SELECT CustomerName,Password, Status FROM Customer WHERE CustomerId=?"); 
+    		PreparedStatement pstm = con.prepareStatement("SELECT Name,Password, IsAccount FROM Customer WHERE CustomerId=?"); 
     		pstm.setString(1, id);
     		ResultSet rs = pstm.executeQuery();
     		
@@ -99,30 +106,34 @@ public class Login extends HttpServlet {
     				
     				out.println("<script>alert('Login Successfull..')</script>");
     				
-    				String StudentName = rs.getString("CustomerName");
-    				Boolean Status = rs.getBoolean("Status");
+    				String CustomerName = rs.getString("Name");
+    				Boolean IsAccount = rs.getBoolean("IsAccount");
     				
     				HttpSession hs = request.getSession();
-    				hs.setAttribute("StudentName", StudentName);
-    				hs.setAttribute("StudentId", id);
-    				hs.setAttribute("Status", Status);
+    				hs.setAttribute("CustomerName", CustomerName);
+    				hs.setAttribute("CustomerId", id);
+    				hs.setAttribute("IsAccount", IsAccount);
     				
     				RequestDispatcher rd = request.getRequestDispatcher("/CustomerDashboard.jsp");
     				rd.forward(request, response);
     			}else {
-    				out.println("<script>alert('Login Faild. User Id or Password Mismachted.')</script>");
+    				out.println("<script>alert('Login Faild. Customer ID or Password Mismachted.')</script>");
     				
 //    				response.setContentType("text/html");
 //    				out.print("<h3 style='color:red>Email Id and password did not match.</h3>");
-    				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
-    				rd.include(request, response);
+//    				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
+//    				rd.include(request, response);
+    				
+    				out.println("<script>window.location.href = \"LoginPage.jsp\";</script>");
     			}
     		}else {
-    			out.println("<script>alert('User Id Not found.')</script>");
+    			out.println("<script>alert('Customer ID Not found.')</script>");
 //    			response.setContentType("text/html");
 //				out.print("<h3 style='color:red>User Id not Found.</h3>");
-				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
-				rd.include(request, response);
+//				RequestDispatcher rd = request.getRequestDispatcher("/LoginPage.jsp");
+//				rd.include(request, response);
+				
+				out.println("<script>window.location.href = \"LoginPage.jsp\";</script>");
     		}
     			
     			

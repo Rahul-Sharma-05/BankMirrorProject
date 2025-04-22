@@ -20,11 +20,12 @@ public class CheckEmailServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
 		String email = request.getParameter("email");
+		String role = request.getParameter("role");
 	try {	
 		Class.forName("com.mysql.cj.jdbc.Driver");  
 		Connection con = DriverManager.getConnection(  
 		"jdbc:mysql://localhost:3306/bank","root","Admin@123"); 
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM Customer WHERE email = ?");
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM " + role + " WHERE email = ?");
 		ps.setString(1, email);
 		ResultSet rs = ps.executeQuery();
 

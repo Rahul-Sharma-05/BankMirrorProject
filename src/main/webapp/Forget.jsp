@@ -1,162 +1,89 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.Properties" %>
-<%@ page import="javax.mail.*" %>
-<%@ page import="javax.mail.internet.*" %>
 <!DOCTYPE html>
 <html>
 <head>
-
-	<script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .tab-active {
-      @apply border-b-2 border-blue-600 text-blue-600;
-    }
-  </style>
-  
-    <title>Customer Registration</title>
+    <title>Forgot Details</title>
     <style>
         body {
-            font-family: Arial;
-            background-color: #f2f2f2;
-            
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .container1 {
-            width: 600px;
-            margin: auto;
-            background-color: #fff;
-            margin-top : 50px;
-            padding: 25px;
+        .form-container {
+            background-color: white;
+            padding: 30px 40px;
             border-radius: 10px;
-            box-shadow: 0 0 10px #999;
+            box-shadow: 0px 0px 10px #ccc;
+            width: 400px;
         }
 
-        p {
+        h2 {
             text-align: center;
-    padding-bottom: 15px;
-    padding-top: 5px;
-    color: gray;
-    font-size: x-large;
+            color: #333;
         }
 
         label {
+            display: block;
+            margin-top: 20px;
             font-weight: bold;
-            margin-right : 20px;
         }
 
-        input[type=text],
-        input[type=tel],
-        input[type=email],
-        input[type=password] {
-            width: 160px;
-            padding: 8px;
-            margin: 8px 0 16px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        textarea {
-            width: 70%;
-            padding: 8px;
-            margin: 8px 0 16px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            vertical-align: middle;
-        }
-
-        .name-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .name-row .form-group {
-            flex: 1;
-        }
-
-        button{
-            background-color: Black;
-            color: White;
+        input[type="email"] {
+            width: 100%;
             padding: 10px;
-            border: none;
+            margin-top: 8px;
+            border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
-            cursor: pointer;
         }
-        button:hover {
-            background-color: Red;
-            color: Green;
-        }
-        input[type=submit] {
+
+        input[type="submit"] {
             background-color: #007bff;
             color: white;
-            padding: 10px;
-            width: 100%;
             border: none;
-            border-radius: 6px;
+            padding: 10px;
+            margin-top: 25px;
+            width: 100%;
             font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
         }
 
-        input[type=submit]:hover {
+        input[type="submit"]:hover {
             background-color: #0056b3;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+<%@ page import ="java.sql.*"%>
+<% String role = request.getParameter("role"); %>
+<script>
+    const role = "<%= role %>";
+</script>
 
-<!-- Navbar -->
-  <header class="bg-white shadow">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-blue-700">TrustBank</h1>
-      <nav class="space-x-4">
-        <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">Services</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">About</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-<%
-    String message = (String) request.getAttribute("message");
-    if (message != null) {
-%>
-    <script>
-        alert("<%= message %>");
-    </script>
-<%
-    }
-%>
-
-	
-
-    <div class="container1">
-        <p><strong>Customer Registration</strong></p>
-        <form action="Registration" method="post">
-            <div class="name-row">
-                <div class="form-group">
-                    <label>First Name:</label>
-                    <input type="text" name="firstName"  id="Fname"required>
-                </div>
-                <div class="form-group">
-                    <label>Middle Name:</label>
-                    <input type="text" name="middleName" id="Mname">
-                </div>
-                <div class="form-group">
-                    <label>Last Name:</label>
-                    <input type="text" name="lastName" id="Lname">
-                </div>
-            </div>
-
-            <label>Mobile Number:</label>
-            <input type="tel" name="mobile" pattern="[0-9]{10}" required placeholder="10-digit mobile number">
-            <br>
-
-            <label style="margin-right:25px;">Email Address:</label>
-            <input type="email" id="email" name="email" required onblur="checkGmail()" oninput="otpSection.style.display='none'; registerBtn.disabled=false;">
-
-            <br>
-
+    <div class="form-container">
+        <h2>Forgot Details (<%= role %>)</h2>
+        <form action="ChangePassword?role=<%= role %>" method="post">
+            <label for="email">Registered Email Address</label>
+            <input type="email" name="email" id="email" required placeholder="Enter your registered email">
+            <button type="button" onclick="checkGmail()">Send Recovery Email</button>
+            
             <!-- OTP Section (Initially Hidden) -->
             <div id="otpSection" style="display: none; margin-top: 10px;">
                 <label style="margin-right:57px;">Enter OTP:</label>
@@ -166,24 +93,32 @@
                 <br>
                 <span style="color: red; font-size: medium;">OTP has been sent your e-mail. Expires after 3 minutes.</span>
             </div>
-
-            <label style="margin-right:70px;">Address:</label>
-            <textarea name="address" rows="3" required></textarea>
-            <br>
-
-            <label for="password" style="margin-right: 60px;">Password:</label>
+            
+            <div id="detailsSection" style="display: none; margin-top: 10px;">
+            	<label for="ID" style="margin-right: 60px;">Your ID : </label>
+            	<input id="customerIdSpan" disabled name="CustomerId" >
+            	<br>
+            	<a href="loginPage.jsp" class="back-link">← Back to Login</a>            	
+            	<button onclick="ChangePassword()">Change Password</button>
+            	
+            	
+            	<div id="passwordSection" style="display: none; margin-top: 10px;">
+            	<label for="password" style="margin-right: 60px;">Password:</label>
             <input type="password" id="password" name="password" required>
             <br>
             <span id="passwordError" style="color: red; font-size: medium;"></span>
             <br>
-
-            <input type="submit" value="Register" id="registerBtn">
+            </div>
             
-            <div style="text-align: center; margin-top:10px;">
-        	<a href="LoginPage.jsp" style="color: Red">I have Customer ID, Login !</a>
-        </div>
+            </div>
+            
+            <input type="submit" value="Submit" id="submitBtn">
         </form>
+        
     </div>
+    
+    
+    
     
     <script>
     const passwordInput = document.getElementById('password');
@@ -216,16 +151,11 @@
 
     function checkGmail() {
     	
-    	const work = "registration";
-    	const role = "Customer";
-    	const firstName = document.querySelector('input[name="firstName"]').value;
-        const middleName = document.querySelector('input[name="middleName"]').value;
-        const lastName = document.querySelector('input[name="lastName"]').value;
-        const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+    	const work = "forget";
+    	const fullName = role;
         const email = document.getElementById("email").value; // Added this line
         const otpSection = document.getElementById("otpSection");
-        const registerBtn = document.getElementById("registerBtn");
-
+        const submitBtn = document.getElementById("submitBtn");
         if (email.endsWith("@gmail.com")) {
         	
         	//Verifying Email Uniqueness
@@ -239,17 +169,17 @@
     })
         .then(res => res.text())
         .then(data => {
-            if (data === "exists") {
-                alert("Email already registered!");
+            if (data === "unique") {
+                alert("Email Not Registered!");
             }
-            if (data === "unique"){
+            if (data === "exists"){
             	   
             	// Generate OTP
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
           //      alert("Your OTP is: " + generatedOtp); // For demo purposes only
 
                 otpVerified = false;
-                registerBtn.disabled = true;
+                submitBtn.disabled = true;
                 otpSection.style.display = "block";
 
                 // Set OTP expiration time to 3 minutes from now
@@ -265,6 +195,7 @@
               "&otp=" + encodeURIComponent(generatedOtp) +
               "&name=" + encodeURIComponent(fullName)+
               "&work=" + encodeURIComponent(work)
+              
     }).then(response => response.text())
                 .then(data => {
                     console.log("Server response:", data);
@@ -287,7 +218,12 @@
     function verifyOtp() {
         const userOtp = document.getElementById("otpInput").value;
         const otpStatus = document.getElementById("otpStatus");
-        const registerBtn = document.getElementById("registerBtn");
+        const submitBtn = document.getElementById("submitBtn");
+        const email = document.getElementById("email").value;
+
+        const detailsSection = document.getElementById("detailsSection");
+        
+
 
         const currentTime = Date.now();
 
@@ -295,7 +231,7 @@
             otpStatus.textContent = "✘ OTP Expired";
             otpStatus.style.color = "red";
             otpVerified = false;
-            registerBtn.disabled = true;
+            submitBtn.disabled = true;
             return;
         }
 
@@ -303,14 +239,39 @@
             otpStatus.textContent = "✔ Verified";
             otpStatus.style.color = "green";
             otpVerified = true;
-            registerBtn.disabled = false;
+            submitBtn.disabled = false;
+            detailsSection.style.display = "block";
+            
+            fetch("GetCustomerIdServlet", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "email=" + encodeURIComponent(email)
+            })
+            .then(res => res.text())
+            .then(customerId => {
+                console.log("Customer ID:", customerId);
+                // Optionally set it into a hidden input or span:
+                document.getElementById("customerIdSpan").value = customerId;
+            })
+            .catch(err => console.error(err));
+
+            
         } else {
             otpStatus.textContent = "✘ Invalid OTP";
             otpStatus.style.color = "red";
             otpVerified = false;
-            registerBtn.disabled = true;
+            submitBtn.disabled = true;
         }
     }
+    
+    
+    function ChangePassword(){
+    	const passwordSection = document.getElementById("passwordSection");
+    	passwordSection.style.display = "block";
+    }
     </script>
+
 </body>
 </html>

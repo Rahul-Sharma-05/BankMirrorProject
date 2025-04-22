@@ -51,18 +51,21 @@
       </div>
 
       <!-- Customer Login Form -->
-      <form id="customerForm" class="space-y-4">
+      <form id="customerForm" class="space-y-4" method="post" Action="Login">
         <div>
           <label class="block text-sm font-medium text-gray-700">Customer ID</label>
-          <input type="text" required placeholder="Enter your ID" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" required id="name" name="t1" placeholder="Enter your ID" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" required placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="password" required placeholder="Enter password" id="password" name="t2" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <br>
+            <span id="passwordError" style="color: red; font-size: medium;"></span>
+          <br>
         </div>
         <button type="submit" name="b1" value="CustomerLogin" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Customer</button>
         <div style="text-align: center;">
-        	<a href="Forget1.jsp" style="color: Red; padding-right:15px;">Forget Details</a>
+        	<a href="Forget.jsp?role=Customer" style="color: Red; padding-right:15px;">Forget Details</a>
         	<span><strong>|</strong></span>
         	<a href="Registration.jsp" style="color: Red; padding-left:15px;">New Customer? Register!</a>
         </div>
@@ -71,16 +74,19 @@
       <!-- Admin Login Form -->
       <form id="adminForm" class="space-y-4 hidden" method="post" Action="Login">
         <div>
-          <label class="block text-sm font-medium text-gray-700">Admin Username</label>
-          <input type="text" name="t1" required placeholder="Enter admin username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <label class="block text-sm font-medium text-gray-700">Admin ID</label>
+          <input type="text" name="t1" required placeholder="Enter Admin ID" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" name="t2" required placeholder="Enter password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="password" name="t2" required placeholder="Enter password" id="adminPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+		  <br>
+		  <span id="adminPasswordError" style="color: red; font-size: medium;"></span>
+		  <br>
         </div>
         <button type="submit" name="b1" value="AdminLogin" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login as Admin</button>
         <div style="text-align: center;">
-        	<a href="Forget2.jsp" style="color: Red">Forget Details</a>
+        	<a href="Forget.jsp?role=Admin" style="color: Red">Forget Details</a>
         </div>
       </form>
     </div>
@@ -109,6 +115,35 @@
     // Set default to customer tab
     showForm('customer');
   </script>
+  
+  <script>
+  function validatePassword(inputId, errorId) {
+    const passwordInput = document.getElementById(inputId);
+    const passwordError = document.getElementById(errorId);
+
+    passwordInput.addEventListener('input', function () {
+      const password = passwordInput.value;
+      const minLength = 8;
+      const hasLower = /[a-z]/.test(password);
+      const hasUpper = /[A-Z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+      passwordError.textContent = '';
+
+      if (password.length < minLength) {
+        passwordError.textContent = 'Password must be at least 8 characters long.';
+      } else if (!hasLower || !hasUpper || !hasNumber || !hasSpecial) {
+        passwordError.textContent = 'Password must contain a lowercase, uppercase, number, and special character.';
+      }
+    });
+  }
+
+  // Apply to both customer and admin forms
+  validatePassword('password', 'passwordError'); // Customer
+  validatePassword('adminPassword', 'adminPasswordError'); // Admin
+</script>
+
 
 </body>
 </html>

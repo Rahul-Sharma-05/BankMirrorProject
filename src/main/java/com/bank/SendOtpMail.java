@@ -23,6 +23,7 @@ public class SendOtpMail extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		String work = request.getParameter("work");
 		String email = request.getParameter("email");
 		String name = request.getParameter("name");
 		String otp = request.getParameter("otp");
@@ -51,14 +52,26 @@ public class SendOtpMail extends HttpServlet {
 		            message.setFrom(new InternetAddress(from));
 		            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 		            message.setSubject("Your OTP Code");
-		            String htmlMessage =
+		            String htmlMessage1 =
 		            		"<p>Hello <strong>"+ name +"</strong></p>" +
 		            	    "<p>Thanks for choosing our bank.</p>" +
-		            	    "<p>To complete your registration, enter the given OTP within 3 min.</p>" +
+		            	    "<p>To complete your registration, enter the given OTP within 3 mins.</p>" +
 		            	    "<p>Your OTP is: <strong style='font-size: 18px;'>" + otp + "</strong></p>" +
+		            	    "<p>If you not generated this OTP, then do not this with anyone.</p>"+
 		            	    "<p>Thank you!!</p>";
+		            
+		            String htmlMessage2 =
+		            		"<p>Hello <strong>"+ name +"</strong></p>" +
+		            	    "<p>This mail is with the reference of ID with our bank.</p>" +
+		            	    "<p>To know your details please enter the below OTP within 3 mins.</p>" +
+		            	    "<p>Your OTP is: <strong style='font-size: 18px;'>" + otp + "</strong></p>" +
+		            	    "<p>If you not generated this OTP, then do not this with anyone.</p>"+
+		            	    "<p>Thank you!!</p>";
+		            if (work.equalsIgnoreCase("registration"))
+		                message.setContent(htmlMessage1, "text/html");
 
-		            	message.setContent(htmlMessage, "text/html");
+		            if (work.equalsIgnoreCase("forget"))
+		                message.setContent(htmlMessage2, "text/html");
 
 		        // Send message
 		        Transport.send(message);
