@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.sql.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +33,9 @@
             font-weight: bold;
         }
 
-        input[type="email"] {
+        input[type="email"],
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-top: 8px;
@@ -41,19 +44,19 @@
             font-size: 16px;
         }
 
-        input[type="submit"] {
+        button, input[type="submit"] {
             background-color: #007bff;
             color: white;
             border: none;
             padding: 10px;
-            margin-top: 25px;
+            margin-top: 15px;
             width: 100%;
             font-size: 16px;
             border-radius: 6px;
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        button:hover, input[type="submit"]:hover {
             background-color: #0056b3;
         }
 
@@ -68,59 +71,63 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        #passwordError {
+            color: red;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-<%@ page import ="java.sql.*"%>
-<% String role = request.getParameter("role"); %>
+
+<%
+    String role = request.getParameter("role");
+%>
+
 <script>
-    const role = "<%= role %>";
+    const role = "<%=role%>";
 </script>
 
-    <div class="form-container">
-        <h2>Forgot Details (<%= role %>)</h2>
-        <form action="ChangePassword?role=<%= role %>" method="post">
-            <label for="email">Registered Email Address</label>
-            <input type="email" name="email" id="email" required placeholder="Enter your registered email">
-            <button type="button" onclick="checkGmail()">Send Recovery Email</button>
-            
-            <!-- OTP Section (Initially Hidden) -->
-            <div id="otpSection" style="display: none; margin-top: 10px;">
-                <label style="margin-right:57px;">Enter OTP:</label>
-                <input type="text" id="otpInput" placeholder="Enter OTP">
-                <button type="button" onclick="verifyOtp()">Verify OTP</button>
-                <span id="otpStatus" style="margin-left: 10px;"></span>
-                <br>
-                <span style="color: red; font-size: medium;">OTP has been sent your e-mail. Expires after 3 minutes.</span>
+<div class="form-container">
+    <h2>Forgot Details (<%=role%>)</h2>
+    <form action="ChangePassword?role=<%=role%>" method="post" id="forgotForm">
+        <label for="email">Registered Email Address</label>
+        <input type="email" name="email" id="email" required placeholder="Enter your registered email">
+
+        <button type="button" onclick="checkGmail()" id="sendRecoveryEmailBtn">Send Recovery Email</button>
+
+        <!-- OTP Section -->
+        <div id="otpSection" style="display: none;">
+            <label for="otpInput">Enter OTP</label>
+            <input type="text" id="otpInput" placeholder="Enter OTP">
+            <button type="button" onclick="verifyOtp()" id="verifyOtpBtn">Verify OTP</button>
+            <span id="otpStatus"></span>
+            <p style="color: red;" id="otpInstructionParagraph">OTP has been sent to your email. Expires after 3 minutes.</p>
+        </div>
+
+        <!-- Details Section -->
+        <div id="detailsSection" style="display: none;">
+            <label for="customerIdSpan">Your ID:</label>
+            <input type="text" id="customerIdSpan" name="CustomerId" readonly>
+            <p>Keep your User ID safe for future references.</p>
+
+            <button type="button" onclick="ChangePassword()" id="changePasswordBtn">Change Password</button>
+
+            <!-- Password Section -->
+            <div id="passwordSection" style="display: none;">
+                <label for="password">Enter New Password : </label>
+                <input type="password" id="password" name="password" required>
+                <span id="passwordError"></span>
             </div>
-            
-            <div id="detailsSection" style="display: none; margin-top: 10px;">
-            	<label for="ID" style="margin-right: 60px;">Your ID : </label>
-            	<input id="customerIdSpan" disabled name="CustomerId" >
-            	<br>
-            	<a href="loginPage.jsp" class="back-link">← Back to Login</a>            	
-            	<button onclick="ChangePassword()">Change Password</button>
-            	
-            	
-            	<div id="passwordSection" style="display: none; margin-top: 10px;">
-            	<label for="password" style="margin-right: 60px;">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <span id="passwordError" style="color: red; font-size: medium;"></span>
-            <br>
-            </div>
-            
-            </div>
-            
-            <input type="submit" value="Submit" id="submitBtn">
-        </form>
-        
-    </div>
-    
-    
-    
-    
-    <script>
+
+            <input type="submit" value="Submit" id="submitBtn" style="display: none;">
+        </div>
+
+        <a href="LoginPage.jsp" class="back-link">← Back to Login</a>
+    </form>
+</div>
+
+<script>
     const passwordInput = document.getElementById('password');
     const passwordError = document.getElementById('passwordError');
     
@@ -143,8 +150,8 @@
         }
     });
 </script>
-    
-    <script>
+
+	<script>
     let generatedOtp = "";
     let otpVerified = false;
     let otpExpirationTime = null;
@@ -154,8 +161,12 @@
     	const work = "forget";
     	const fullName = role;
         const email = document.getElementById("email").value; // Added this line
+        const emailBtn = document.getElementById("email");
         const otpSection = document.getElementById("otpSection");
+        const sendRecoveryEmailBtn = document.getElementById("sendRecoveryEmailBtn");
         const submitBtn = document.getElementById("submitBtn");
+        const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+        
         if (email.endsWith("@gmail.com")) {
         	
         	//Verifying Email Uniqueness
@@ -180,6 +191,8 @@
 
                 otpVerified = false;
                 submitBtn.disabled = true;
+                emailBtn.readOnly = true;
+                sendRecoveryEmailBtn.style.display = "none";
                 otpSection.style.display = "block";
 
                 // Set OTP expiration time to 3 minutes from now
@@ -220,6 +233,8 @@
         const otpStatus = document.getElementById("otpStatus");
         const submitBtn = document.getElementById("submitBtn");
         const email = document.getElementById("email").value;
+        const otpInstructionParagraph = document.getElementById("otpInstructionParagraph");
+        
 
         const detailsSection = document.getElementById("detailsSection");
         
@@ -238,9 +253,11 @@
         if (userOtp === generatedOtp) {
             otpStatus.textContent = "✔ Verified";
             otpStatus.style.color = "green";
+            verifyOtpBtn.style.display = "none";
             otpVerified = true;
             submitBtn.disabled = false;
             detailsSection.style.display = "block";
+            otpInstructionParagraph.style.display = "none";
             
             fetch("GetCustomerIdServlet", {
                 method: "POST",
@@ -270,6 +287,10 @@
     function ChangePassword(){
     	const passwordSection = document.getElementById("passwordSection");
     	passwordSection.style.display = "block";
+    	const submitBtn = document.getElementById("submitBtn");
+    	submitBtn.style.display = "block";
+    	const changePasswordBtn = document.getElementById('changePasswordBtn');
+    	changePasswordBtn.style.display = "none";
     }
     </script>
 

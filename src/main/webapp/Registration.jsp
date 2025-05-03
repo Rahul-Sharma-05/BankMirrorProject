@@ -1,191 +1,189 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.Properties" %>
-<%@ page import="javax.mail.*" %>
-<%@ page import="javax.mail.internet.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.Properties"%>
+<%@ page import="javax.mail.*"%>
+<%@ page import="javax.mail.internet.*"%>
 <!DOCTYPE html>
 <html>
 <head>
 
-	<script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .tab-active {
-      @apply border-b-2 border-blue-600 text-blue-600;
-    }
-  </style>
-  
-    <title>Customer Registration</title>
-    <style>
-        body {
-            font-family: Arial;
-            background-color: #f2f2f2;
-            
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.tab-active { @apply border-b-2 border-blue-600 text-blue-600;
+	
+}
+</style>
 
-        .container1 {
-            width: 600px;
-            margin: auto;
-            background-color: #fff;
-            margin-top : 50px;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #999;
-        }
+<title>Customer Registration</title>
+<style>
+body {
+	font-family: Arial;
+	background-color: #f2f2f2;
+}
 
-        p {
-            text-align: center;
-    padding-bottom: 15px;
-    padding-top: 5px;
-    color: gray;
-    font-size: x-large;
-        }
+.container1 {
+	width: 600px;
+	margin: auto;
+	background-color: #fff;
+	margin-top: 50px;
+	padding: 25px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px #999;
+}
 
-        label {
-            font-weight: bold;
-            margin-right : 20px;
-        }
+p {
+	text-align: center;
+	padding-bottom: 15px;
+	padding-top: 5px;
+	color: gray;
+	font-size: x-large;
+}
 
-        input[type=text],
-        input[type=tel],
-        input[type=email],
-        input[type=password] {
-            width: 160px;
-            padding: 8px;
-            margin: 8px 0 16px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+label {
+	font-weight: bold;
+	margin-right: 20px;
+}
 
-        textarea {
-            width: 70%;
-            padding: 8px;
-            margin: 8px 0 16px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            vertical-align: middle;
-        }
+input[type=text], input[type=tel], input[type=email], input[type=password]
+	{
+	width: 160px;
+	padding: 8px;
+	margin: 8px 0 16px 0;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+}
 
-        .name-row {
-            display: flex;
-            gap: 10px;
-        }
+textarea {
+	width: 70%;
+	padding: 8px;
+	margin: 8px 0 16px 0;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	vertical-align: middle;
+}
 
-        .name-row .form-group {
-            flex: 1;
-        }
+.name-row {
+	display: flex;
+	gap: 10px;
+}
 
-        button{
-            background-color: Black;
-            color: White;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: Red;
-            color: Green;
-        }
-        input[type=submit] {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+.name-row .form-group {
+	flex: 1;
+}
 
-        input[type=submit]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+button {
+	background-color: Black;
+	color: White;
+	padding: 10px;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: Red;
+	color: Green;
+}
+
+input[type=submit] {
+	background-color: #007bff;
+	color: white;
+	padding: 10px;
+	width: 100%;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+input[type=submit]:hover {
+	background-color: #0056b3;
+}
+</style>
 </head>
 <body>
 
-<!-- Navbar -->
-  <header class="bg-white shadow">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-blue-700">TrustBank</h1>
-      <nav class="space-x-4">
-        <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">Services</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">About</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
-      </nav>
-    </div>
-  </header>
+	<!-- Navbar -->
+	<header class="bg-white shadow">
+		<div
+			class="container mx-auto px-6 py-4 flex justify-between items-center">
+			<h1 class="text-2xl font-bold text-blue-700">TrustBank</h1>
+			<nav class="space-x-4">
+				<a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+				<a href="#" class="text-gray-600 hover:text-blue-600">Services</a> <a
+					href="#" class="text-gray-600 hover:text-blue-600">About</a> <a
+					href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
+			</nav>
+		</div>
+	</header>
 
-<%
-    String message = (String) request.getAttribute("message");
-    if (message != null) {
-%>
-    <script>
-        alert("<%= message %>");
+	<%
+	String message = (String) request.getAttribute("message");
+	if (message != null) {
+	%>
+	<script>
+        alert("<%=message%>");
     </script>
-<%
-    }
-%>
+	<%
+	}
+	%>
 
-	
 
-    <div class="container1">
-        <p><strong>Customer Registration</strong></p>
-        <form action="Registration" method="post">
-            <div class="name-row">
-                <div class="form-group">
-                    <label>First Name:</label>
-                    <input type="text" name="firstName"  id="Fname"required>
-                </div>
-                <div class="form-group">
-                    <label>Middle Name:</label>
-                    <input type="text" name="middleName" id="Mname">
-                </div>
-                <div class="form-group">
-                    <label>Last Name:</label>
-                    <input type="text" name="lastName" id="Lname">
-                </div>
-            </div>
 
-            <label>Mobile Number:</label>
-            <input type="tel" name="mobile" pattern="[0-9]{10}" required placeholder="10-digit mobile number">
-            <br>
+	<div class="container1">
+		<p>
+			<strong>Customer Registration</strong>
+		</p>
+		<form action="Registration" method="post">
+			<div class="name-row">
+				<div class="form-group">
+					<label>First Name:</label> <input type="text" name="firstName"
+						id="Fname" required>
+				</div>
+				<div class="form-group">
+					<label>Middle Name:</label> <input type="text" name="middleName"
+						id="Mname">
+				</div>
+				<div class="form-group">
+					<label>Last Name:</label> <input type="text" name="lastName"
+						id="Lname">
+				</div>
+			</div>
 
-            <label style="margin-right:25px;">Email Address:</label>
-            <input type="email" id="email" name="email" required onblur="checkGmail()" oninput="otpSection.style.display='none'; registerBtn.disabled=false;">
+			<label>Mobile Number:</label> <input type="tel" name="mobile"
+				pattern="[0-9]{10}" required placeholder="10-digit mobile number">
+			<br> <label style="margin-right: 25px;">Email Address:</label> <input
+				type="email" id="email" name="email" required onblur="checkGmail()"
+				oninput="otpSection.style.display='none'; registerBtn.disabled=false;">
 
-            <br>
+			<br>
 
-            <!-- OTP Section (Initially Hidden) -->
-            <div id="otpSection" style="display: none; margin-top: 10px;">
-                <label style="margin-right:57px;">Enter OTP:</label>
-                <input type="text" id="otpInput" placeholder="Enter OTP">
-                <button type="button" onclick="verifyOtp()">Verify OTP</button>
-                <span id="otpStatus" style="margin-left: 10px;"></span>
-                <br>
-                <span style="color: red; font-size: medium;">OTP has been sent your e-mail. Expires after 3 minutes.</span>
-            </div>
+			<!-- OTP Section (Initially Hidden) -->
+			<div id="otpSection" style="display: none; margin-top: 10px;">
+				<label style="margin-right: 57px;">Enter OTP:</label> <input
+					type="text" id="otpInput" placeholder="Enter OTP">
+				<button type="button" onclick="verifyOtp()">Verify OTP</button>
+				<span id="otpStatus" style="margin-left: 10px;"></span> <br> <span
+					style="color: red; font-size: medium;">OTP has been sent
+					your e-mail. Expires after 3 minutes.</span>
+			</div>
 
-            <label style="margin-right:70px;">Address:</label>
-            <textarea name="address" rows="3" required></textarea>
-            <br>
+			<label style="margin-right: 70px;">Address:</label>
+			<textarea name="address" rows="3" required></textarea>
+			<br> <label for="password" style="margin-right: 60px;">Password:</label>
+			<input type="password" id="password" name="password" required>
+			<br> <span id="passwordError"
+				style="color: red; font-size: medium;"></span> <br> <input
+				type="submit" value="Register" id="registerBtn">
 
-            <label for="password" style="margin-right: 60px;">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <span id="passwordError" style="color: red; font-size: medium;"></span>
-            <br>
+			<div style="text-align: center; margin-top: 10px;">
+				<a href="LoginPage.jsp" style="color: Red">I have Customer ID,
+					Login !</a>
+			</div>
+		</form>
+	</div>
 
-            <input type="submit" value="Register" id="registerBtn">
-            
-            <div style="text-align: center; margin-top:10px;">
-        	<a href="LoginPage.jsp" style="color: Red">I have Customer ID, Login !</a>
-        </div>
-        </form>
-    </div>
-    
-    <script>
+	<script>
     const passwordInput = document.getElementById('password');
     const passwordError = document.getElementById('passwordError');
     
@@ -208,8 +206,8 @@
         }
     });
 </script>
-    
-    <script>
+
+	<script>
     let generatedOtp = "";
     let otpVerified = false;
     let otpExpirationTime = null;

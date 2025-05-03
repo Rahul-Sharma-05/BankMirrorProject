@@ -14,31 +14,31 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/GetCustomerIdServlet")
 public class GetCustomerIdServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        String email = request.getParameter("email");
-        String customerId = "";
+		String email = request.getParameter("email");
+		String customerId = "";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "Admin@123");
-            PreparedStatement ps = con.prepareStatement("SELECT CustomerId FROM Customer WHERE email = ?");
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "Admin@123");
+			PreparedStatement ps = con.prepareStatement("SELECT CustomerId FROM Customer WHERE email = ?");
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                customerId = rs.getString("CustomerId");
-            }
+			if (rs.next()) {
+				customerId = rs.getString("CustomerId");
+			}
 
-            rs.close();
-            ps.close();
-            con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			rs.close();
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        response.setContentType("text/plain");
-        response.getWriter().write(customerId);
-    }
+		response.setContentType("text/plain");
+		response.getWriter().write(customerId);
+	}
 }

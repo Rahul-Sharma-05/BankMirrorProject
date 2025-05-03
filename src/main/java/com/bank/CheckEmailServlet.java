@@ -1,4 +1,4 @@
-package com.bank; 
+package com.bank;
 
 import java.sql.*;
 import java.io.IOException;
@@ -17,25 +17,25 @@ public class CheckEmailServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		String email = request.getParameter("email");
 		String role = request.getParameter("role");
-	try {	
-		Class.forName("com.mysql.cj.jdbc.Driver");  
-		Connection con = DriverManager.getConnection(  
-		"jdbc:mysql://localhost:3306/bank","root","Admin@123"); 
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM " + role + " WHERE email = ?");
-		ps.setString(1, email);
-		ResultSet rs = ps.executeQuery();
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "Admin@123");
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM " + role + " WHERE email = ?");
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
 
-		if (rs.next()) {
-		    response.getWriter().write("exists");
-		} else {
-		    response.getWriter().write("unique");
+			if (rs.next()) {
+				response.getWriter().write("exists");
+			} else {
+				response.getWriter().write("unique");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-	}catch(Exception e){
-		System.out.println(e);
-}
 	}
 }
